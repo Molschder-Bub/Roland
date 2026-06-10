@@ -1,0 +1,12 @@
+# Persönliche/lokale Konfiguration – niemals committen
+feedback_config.json
+
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+
+# Download-Cache
+roland_downloads/
