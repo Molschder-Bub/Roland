@@ -81,7 +81,7 @@ jobs = {}  # job_id -> {status, progress, filename, filepath, error}
 # ---------------------------------------------------------------------------
 # WICHTIG: Bei jeder funktionalen Änderung an Roland muss diese Versionsnummer
 # erhoeht werden (z.B. "beta 0.1" -> "beta 0.2"). Wird im Footer angezeigt.
-APP_VERSION = "beta 0.2"
+APP_VERSION = "beta 0.3"
 
 # ---------------------------------------------------------------------------
 # Copyright / Footer
@@ -845,28 +845,6 @@ HTML = r"""<!DOCTYPE html>
         </button>
       </div>
     </div>
-    <!-- Feedback -->
-    <div class="feedback-card collapsed" id="feedbackCard">
-      <div class="feedback-toggle" id="feedbackToggle">
-        <span class="feedback-chevron" id="feedbackChevron">▾</span>
-        <div class="feedback-title">💬 Feedback geben</div>
-      </div>
-      <div class="feedback-body" id="feedbackBody">
-        <input type="text" id="feedbackName" placeholder="Dein Name (optional)" autocomplete="off">
-        <textarea id="feedbackMessage" rows="3" placeholder="Was möchtest du uns mitteilen?"></textarea>
-        <div class="feedback-footer">
-          <div class="modal-status" id="feedbackStatus"></div>
-          <button type="button" class="btn-go" id="feedbackSend">Senden</button>
-        </div>
-      </div>
-    </div>
-    <!--
-      GESCHUETZT – NICHT ENTFERNEN ODER AENDERN.
-      Copyright-Hinweis & Versionsangabe (siehe APP_COPYRIGHT_HOLDER /
-      APP_COPYRIGHT_YEAR / APP_VERSION in server.py).
-    -->
-    <div class="app-copyright">© {{ copyright_holder }} {{ copyright_year }} · Vers. {{ app_version }}</div>
-
     <!-- Result -->
     <div class="result-wrap" id="resultWrap">
       <div class="result-card">
@@ -909,6 +887,28 @@ HTML = r"""<!DOCTYPE html>
         </div>
       </div>
     </div>
+
+    <!-- Feedback -->
+    <div class="feedback-card collapsed" id="feedbackCard">
+      <div class="feedback-toggle" id="feedbackToggle">
+        <span class="feedback-chevron" id="feedbackChevron">▾</span>
+        <div class="feedback-title">💬 Feedback geben</div>
+      </div>
+      <div class="feedback-body" id="feedbackBody">
+        <input type="text" id="feedbackName" placeholder="Dein Name (optional)" autocomplete="off">
+        <textarea id="feedbackMessage" rows="3" placeholder="Was möchtest du uns mitteilen?"></textarea>
+        <div class="feedback-footer">
+          <div class="modal-status" id="feedbackStatus"></div>
+          <button type="button" class="btn-go" id="feedbackSend">Senden</button>
+        </div>
+      </div>
+    </div>
+    <!--
+      GESCHUETZT – NICHT ENTFERNEN ODER AENDERN.
+      Copyright-Hinweis & Versionsangabe (siehe APP_COPYRIGHT_HOLDER /
+      APP_COPYRIGHT_YEAR / APP_VERSION in server.py).
+    -->
+    <div class="app-copyright">© {{ copyright_holder }} {{ copyright_year }} · Vers. {{ app_version }}</div>
   </main>
 
 </div>
