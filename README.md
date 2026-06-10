@@ -13,7 +13,7 @@ Ein lokaler Download- und Konvertierungs-Helfer für Medien aus dem Web – läu
 - Live-Fortschrittsanzeige während des Downloads
 
 ### Transkription
-- Lokale Spracherkennung mit [faster-whisper](https://github.com/SYSTRAN/faster-whisper) – läuft komplett offline auf deinem Mac
+- Lokale Spracherkennung mit [faster-whisper](https://github.com/SYSTRAN/faster-whisper) – läuft komplett offline auf deinem Computer
 - Automatische Zeitmarken in ~30-Sekunden-Abschnitten
 - Such- und Sprungfunktion innerhalb des Transkripts
 - Transkript als Textdatei speichern
@@ -25,15 +25,23 @@ Ein lokaler Download- und Konvertierungs-Helfer für Medien aus dem Web – läu
 
 ## Installation & Start
 
+Roland läuft auf **macOS, Windows und Linux** – die gesamte App ist eine einzige Python-Datei (`server.py`) mit eingebettetem Webinterface.
+
 1. Repository herunterladen / klonen
-2. `Roland.app` öffnen (macOS) oder `python3 server.py` ausführen
+2. Starten:
+   - **macOS:** `Roland.app` doppelklicken (oder `Starten.command`)
+   - **Windows:** `Starten.bat` doppelklicken (oder `python server.py` im Terminal)
+   - **Linux:** `python3 server.py` im Terminal
 3. Im Browser öffnet sich automatisch `http://localhost:7321`
 
 Benötigte Abhängigkeiten (Flask, yt-dlp, faster-whisper) werden beim ersten Start automatisch installiert.
 
 ### Voraussetzungen
 - Python 3
-- [ffmpeg](https://ffmpeg.org/) (für Audio-/Video-Konvertierung)
+- [ffmpeg](https://ffmpeg.org/) (für Audio-/Video-Konvertierung) – muss im `PATH` verfügbar sein
+  - macOS: `brew install ffmpeg`
+  - Windows: [ffmpeg.org](https://ffmpeg.org/download.html) herunterladen und zum `PATH` hinzufügen
+  - Linux: `sudo apt install ffmpeg` (oder entsprechendes Paket der Distribution)
 
 ---
 
