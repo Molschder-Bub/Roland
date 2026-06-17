@@ -81,7 +81,7 @@ jobs = {}  # job_id -> {status, progress, filename, filepath, error}
 # ---------------------------------------------------------------------------
 # WICHTIG: Bei jeder funktionalen Änderung an Roland muss diese Versionsnummer
 # erhoeht werden (z.B. "beta 0.1" -> "beta 0.2"). Wird im Footer angezeigt.
-APP_VERSION = "beta 0.8"
+APP_VERSION = "beta 0.9"
 
 # ---------------------------------------------------------------------------
 # Copyright / Footer
@@ -1148,10 +1148,11 @@ function updateTsActive() {
   if (tsActive >= 0 && tsMatches[tsActive]) {
     const el        = tsMatches[tsActive];
     const scrollBox = document.getElementById('transcriptScroll');
-    // Scroll within the (non-fixed) transcript area so the active hit lands
-    // right at the top, just below the fixed title/search header.
-    const target = el.offsetTop - 8;
-    scrollBox.scrollTo({top: Math.max(target, 0), behavior: 'smooth'});
+    // Compute offset relative to the scroll container
+    const boxTop  = scrollBox.getBoundingClientRect().top;
+    const elTop   = el.getBoundingClientRect().top;
+    const target  = scrollBox.scrollTop + (elTop - boxTop) - 16;
+    scrollBox.scrollTo({ top: Math.max(target, 0), behavior: 'smooth' });
   }
 }
 
