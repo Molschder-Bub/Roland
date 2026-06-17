@@ -81,7 +81,7 @@ jobs = {}  # job_id -> {status, progress, filename, filepath, error}
 # ---------------------------------------------------------------------------
 # WICHTIG: Bei jeder funktionalen Änderung an Roland muss diese Versionsnummer
 # erhoeht werden (z.B. "beta 0.1" -> "beta 0.2"). Wird im Footer angezeigt.
-APP_VERSION = "beta 0.5"
+APP_VERSION = "beta 0.6"
 
 # ---------------------------------------------------------------------------
 # Copyright / Footer
@@ -1041,19 +1041,32 @@ async function poll(jobId) {
     document.getElementById('progressBar').style.width = '98%';
     document.getElementById('progressText').innerHTML =
       '<span class="spinner"></span> Transkribiere Inhalt … (kann je nach Länge etwas dauern)';
+    // File is already ready – show download button and auto-trigger immediately
+    if (data.filename && !document.getElementById('downloadBtn').innerHTML) {
+      document.getElementById('downloadBtn').innerHTML =
+        `<a class="btn-download" href="/download/${jobId}">⬇ ${data.filename}</a>`;
+      const autoLink = document.createElement('a');
+      autoLink.href = `/download/${jobId}`;
+      autoLink.download = data.filename;
+      document.body.appendChild(autoLink);
+      autoLink.click();
+      autoLink.remove();
+    }
   } else if (data.status === 'done') {
     clearInterval(pollInterval);
     document.getElementById('progressBar').style.width = '100%';
     document.getElementById('progressText').textContent = 'Fertig!';
-    document.getElementById('downloadBtn').innerHTML =
-      `<a class="btn-download" href="/download/${jobId}">⬇ ${data.filename}</a>`;
-    // Auto-trigger browser download immediately
-    const autoLink = document.createElement('a');
-    autoLink.href = `/download/${jobId}`;
-    autoLink.download = data.filename;
-    document.body.appendChild(autoLink);
-    autoLink.click();
-    autoLink.remove();
+    // Show download button if not already shown (e.g. no transcription)
+    if (!document.getElementById('downloadBtn').innerHTML) {
+      document.getElementById('downloadBtn').innerHTML =
+        `<a class="btn-download" href="/download/${jobId}">⬇ ${data.filename}</a>`;
+      const autoLink = document.createElement('a');
+      autoLink.href = `/download/${jobId}`;
+      autoLink.download = data.filename;
+      document.body.appendChild(autoLink);
+      autoLink.click();
+      autoLink.remove();
+    }
     if (data.transcript) {
       renderTranscript(data.transcript);
       document.getElementById('transcriptBox').classList.add('show');
