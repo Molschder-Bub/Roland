@@ -68,4 +68,4 @@ Alles läuft lokal auf deinem Computer. Es werden keine Daten an Dritte gesendet
 
 ---
 
-© Molschder-Bub 2026 · Vers. beta 0.2
+© Molschder-Bub 2026 · Vers. 1.1
