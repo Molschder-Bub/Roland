@@ -81,7 +81,7 @@ jobs = {}  # job_id -> {status, progress, filename, filepath, error}
 # ---------------------------------------------------------------------------
 # WICHTIG: Bei jeder funktionalen Änderung an Roland muss diese Versionsnummer
 # erhoeht werden (z.B. "beta 0.1" -> "beta 0.2"). Wird im Footer angezeigt.
-APP_VERSION = "beta 0.6"
+APP_VERSION = "beta 0.7"
 
 # ---------------------------------------------------------------------------
 # Copyright / Footer
@@ -1305,7 +1305,7 @@ def status(job_id):
 @app.route("/download/<job_id>")
 def download(job_id):
     job = jobs.get(job_id)
-    if not job or job["status"] != "done":
+    if not job or not job.get("filepath") or job["status"] not in ("done", "transcribing"):
         return "Nicht bereit", 404
     return send_file(job["filepath"], as_attachment=True,
                      download_name=job["filename"])
