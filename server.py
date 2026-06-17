@@ -81,7 +81,7 @@ jobs = {}  # job_id -> {status, progress, filename, filepath, error}
 # ---------------------------------------------------------------------------
 # WICHTIG: Bei jeder funktionalen Änderung an Roland muss diese Versionsnummer
 # erhoeht werden (z.B. "beta 0.1" -> "beta 0.2"). Wird im Footer angezeigt.
-APP_VERSION = "beta 0.4"
+APP_VERSION = "beta 0.5"
 
 # ---------------------------------------------------------------------------
 # Copyright / Footer
@@ -1047,6 +1047,13 @@ async function poll(jobId) {
     document.getElementById('progressText').textContent = 'Fertig!';
     document.getElementById('downloadBtn').innerHTML =
       `<a class="btn-download" href="/download/${jobId}">⬇ ${data.filename}</a>`;
+    // Auto-trigger browser download immediately
+    const autoLink = document.createElement('a');
+    autoLink.href = `/download/${jobId}`;
+    autoLink.download = data.filename;
+    document.body.appendChild(autoLink);
+    autoLink.click();
+    autoLink.remove();
     if (data.transcript) {
       renderTranscript(data.transcript);
       document.getElementById('transcriptBox').classList.add('show');
