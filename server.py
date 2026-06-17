@@ -81,7 +81,7 @@ jobs = {}  # job_id -> {status, progress, filename, filepath, error}
 # ---------------------------------------------------------------------------
 # WICHTIG: Bei jeder funktionalen Änderung an Roland muss diese Versionsnummer
 # erhoeht werden (z.B. "beta 0.1" -> "beta 0.2"). Wird im Footer angezeigt.
-APP_VERSION = "beta 0.7"
+APP_VERSION = "beta 0.8"
 
 # ---------------------------------------------------------------------------
 # Copyright / Footer
@@ -750,8 +750,19 @@ HTML = r"""<!DOCTYPE html>
   }
   #transcriptText { font-size: 13.5px; line-height: 1.75; color: var(--text); white-space: pre-wrap; }
   #transcriptText div { margin-bottom: 3px; }
-  mark.ts-hit { background: #fef08a; color: inherit; border-radius: 3px; padding: 0 2px; }
-  mark.ts-hit.ts-active { background: var(--accent); color: #fff; }
+  mark.ts-hit {
+    background: #facc15;
+    color: #1a1a1a;
+    border-radius: 3px;
+    padding: 1px 3px;
+    font-weight: 600;
+  }
+  mark.ts-hit.ts-active {
+    background: var(--accent);
+    color: #fff;
+    border-radius: 3px;
+    padding: 1px 3px;
+  }
 
   /* ── Responsive ─────────────────────────── */
   @media (max-width: 900px) {
