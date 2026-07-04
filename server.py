@@ -81,7 +81,7 @@ jobs = {}  # job_id -> {status, progress, filename, filepath, error}
 # ---------------------------------------------------------------------------
 # WICHTIG: Bei jeder funktionalen Änderung an Roland muss diese Versionsnummer
 # erhoeht werden (z.B. "beta 0.1" -> "beta 0.2"). Wird im Footer angezeigt.
-APP_VERSION = "1.5"
+APP_VERSION = "1.6"
 
 # ---------------------------------------------------------------------------
 # Copyright / Footer
@@ -1420,14 +1420,25 @@ def run_download(job_id, url, fmt, quality="best", transcribe=False):
         }
 
         # Twitter/X requires browser cookies since API changes in 2023.
-        # Only Safari is used – it stores cookies without a Keychain prompt on macOS.
+        # Use Chrome with "basic" keyring to avoid macOS Keychain prompt,
+        # then Safari as fallback, then no cookies as last resort.
         if is_twitter:
-            try:
-                safari_opts = dict(opts, cookiesfrombrowser=("safari",))
-                with yt_dlp.YoutubeDL(safari_opts) as ydl:
-                    info = ydl.extract_info(url, download=True)
-            except Exception:
-                # Fallback: try without cookies
+            last_exc = None
+            for cookie_src in (
+                ("chrome", None, "basic", None),  # Chrome, no Keychain prompt
+                ("safari",),                       # Safari fallback
+            ):
+                try:
+                    browser_opts = dict(opts, cookiesfrombrowser=cookie_src)
+                    with yt_dlp.YoutubeDL(browser_opts) as ydl:
+                        info = ydl.extract_info(url, download=True)
+                    last_exc = None
+                    break
+                except Exception as ex:
+                    last_exc = ex
+                    continue
+            if last_exc is not None:
+                # Last resort: no cookies
                 with yt_dlp.YoutubeDL(opts) as ydl:
                     info = ydl.extract_info(url, download=True)
             job["title"] = info.get("title", "Download")
