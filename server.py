@@ -81,7 +81,7 @@ jobs = {}  # job_id -> {status, progress, filename, filepath, error}
 # ---------------------------------------------------------------------------
 # WICHTIG: Bei jeder funktionalen Änderung an Roland muss diese Versionsnummer
 # erhoeht werden (z.B. "beta 0.1" -> "beta 0.2"). Wird im Footer angezeigt.
-APP_VERSION = "1.4"
+APP_VERSION = "1.5"
 
 # ---------------------------------------------------------------------------
 # Copyright / Footer
@@ -1420,23 +1420,17 @@ def run_download(job_id, url, fmt, quality="best", transcribe=False):
         }
 
         # Twitter/X requires browser cookies since API changes in 2023.
-        # Try Safari cookies first, then Chrome as fallback.
+        # Only Safari is used – it stores cookies without a Keychain prompt on macOS.
         if is_twitter:
-            for browser in ("safari", "chrome", "firefox"):
-                try:
-                    test_opts = dict(opts, cookiesfrombrowser=(browser,), quiet=True)
-                    with yt_dlp.YoutubeDL(test_opts) as ydl:
-                        info = ydl.extract_info(url, download=True)
-                    job["title"] = info.get("title", "Download")
-                    opts = None  # signal success
-                    break
-                except Exception:
-                    continue
-            if opts is not None:
-                # Last resort: try without cookies
+            try:
+                safari_opts = dict(opts, cookiesfrombrowser=("safari",))
+                with yt_dlp.YoutubeDL(safari_opts) as ydl:
+                    info = ydl.extract_info(url, download=True)
+            except Exception:
+                # Fallback: try without cookies
                 with yt_dlp.YoutubeDL(opts) as ydl:
                     info = ydl.extract_info(url, download=True)
-                job["title"] = info.get("title", "Download")
+            job["title"] = info.get("title", "Download")
         else:
             with yt_dlp.YoutubeDL(opts) as ydl:
                 info = ydl.extract_info(url, download=True)
