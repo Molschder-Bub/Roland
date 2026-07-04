@@ -81,7 +81,7 @@ jobs = {}  # job_id -> {status, progress, filename, filepath, error}
 # ---------------------------------------------------------------------------
 # WICHTIG: Bei jeder funktionalen Änderung an Roland muss diese Versionsnummer
 # erhoeht werden (z.B. "beta 0.1" -> "beta 0.2"). Wird im Footer angezeigt.
-APP_VERSION = "1.3"
+APP_VERSION = "1.4"
 
 # ---------------------------------------------------------------------------
 # Copyright / Footer
@@ -1404,6 +1404,8 @@ def run_download(job_id, url, fmt, quality="best", transcribe=False):
 
     try:
         job["status"] = "downloading"
+        is_twitter = any(h in url for h in ("twitter.com", "x.com", "t.co"))
+
         opts = {
             "format": ydl_format,
             "outtmpl": os.path.join(out_dir, "%(title)s.%(ext)s"),
@@ -1416,8 +1418,28 @@ def run_download(job_id, url, fmt, quality="best", transcribe=False):
             # browser-style signature/cookie handshake.
             "extractor_args": {"youtube": {"player_client": ["android", "web"]}},
         }
-        with yt_dlp.YoutubeDL(opts) as ydl:
-            info = ydl.extract_info(url, download=True)
+
+        # Twitter/X requires browser cookies since API changes in 2023.
+        # Try Safari cookies first, then Chrome as fallback.
+        if is_twitter:
+            for browser in ("safari", "chrome", "firefox"):
+                try:
+                    test_opts = dict(opts, cookiesfrombrowser=(browser,), quiet=True)
+                    with yt_dlp.YoutubeDL(test_opts) as ydl:
+                        info = ydl.extract_info(url, download=True)
+                    job["title"] = info.get("title", "Download")
+                    opts = None  # signal success
+                    break
+                except Exception:
+                    continue
+            if opts is not None:
+                # Last resort: try without cookies
+                with yt_dlp.YoutubeDL(opts) as ydl:
+                    info = ydl.extract_info(url, download=True)
+                job["title"] = info.get("title", "Download")
+        else:
+            with yt_dlp.YoutubeDL(opts) as ydl:
+                info = ydl.extract_info(url, download=True)
             job["title"] = info.get("title", "Download")
 
         # Find the output file
