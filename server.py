@@ -81,7 +81,7 @@ jobs = {}  # job_id -> {status, progress, filename, filepath, error}
 # ---------------------------------------------------------------------------
 # WICHTIG: Bei jeder funktionalen Änderung an Roland muss diese Versionsnummer
 # erhoeht werden (z.B. "beta 0.1" -> "beta 0.2"). Wird im Footer angezeigt.
-APP_VERSION = "1.2"
+APP_VERSION = "1.3"
 
 # ---------------------------------------------------------------------------
 # Copyright / Footer
@@ -1474,7 +1474,21 @@ def run_download(job_id, url, fmt, quality="best", transcribe=False):
         job["status"] = "done"
     except Exception as e:
         job["status"] = "error"
-        job["error"]  = str(e)
+        err = str(e)
+        # Benutzerfreundliche Fehlermeldungen
+        if "No video could be found" in err:
+            err = "In diesem Beitrag wurde kein Video gefunden. Bitte prüfe, ob der Link ein Video enthält."
+        elif "Private video" in err or "This video is private" in err:
+            err = "Dieses Video ist privat und kann nicht heruntergeladen werden."
+        elif "members-only" in err or "member-only" in err:
+            err = "Dieses Video ist nur für Mitglieder verfügbar."
+        elif "copyright" in err.lower():
+            err = "Dieses Video ist aus urheberrechtlichen Gründen nicht verfügbar."
+        elif "404" in err or "not found" in err.lower():
+            err = "Der Beitrag wurde nicht gefunden. Möglicherweise wurde er gelöscht oder ist nicht öffentlich."
+        elif "429" in err or "Too Many Requests" in err:
+            err = "Zu viele Anfragen – bitte kurz warten und erneut versuchen."
+        job["error"] = err
 
 
 def _check_ffmpeg():
